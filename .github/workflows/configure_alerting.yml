@@ -1,0 +1,65 @@
+name: Configure alerting policies
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      tag:
+        default: latest
+        required: false
+        type: string
+      model_name_prefix:
+        required: true
+        type: string
+      pipeline_bucket:
+        required: true
+        type: string
+    secrets:
+      SERVICE_ACCOUNT_KEY:
+        required: true
+jobs:
+  configure-alerting:
+    name: Configure alerting policies
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+    env:
+      ENVIRONMENT: ${{ inputs.environment }}
+      PIPELINE_BUCKET: "gs://${{ inputs.pipeline_bucket }}"
+      MODEL_NAME_PREFIX: ${{ inputs.model_name_prefix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+#       Ask where to get the poetry version
+      - name: install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.7.0
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      - name: Install project
+        run: |
+          poetry install --no-interaction
+
+      - name: Google Auth
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: Setup Cloud SDK
+        uses: "google-github-actions/setup-gcloud@v0.6.0"
+
+      - name: Synchronise alerting policies
+        run: |
+          source .venv/bin/activate
+          poe sync_alert_policies_in_ci

@@ -1,0 +1,126 @@
+name: Nprod Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      run-training:
+        description: 'Run Training'
+        required: false
+        type: boolean
+      with-pipeline-schedules:
+        description: 'Run With Pipeline Schedules'
+        required: false
+        type: boolean
+  push:
+    branches:
+      - main
+
+env:
+  ENV: nprod
+
+jobs:
+  set-project-vars:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout this repo
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+          .github
+    - name: Set Environment Variables
+      id: set-vars
+      uses: ./.github/actions
+      with:
+        varFilePath: ./.github/variables/project_vars.env
+    outputs:
+      ENV: ${{ env.ENV }}
+      LOCATION: ${{ env.LOCATION }}
+      PROJECT_PREFIX: ${{ env.PROJECT_PREFIX }}
+      PROJECT_NAME: ${{ env.PROJECT_NAME }}
+      PIPELINE_BUCKET_NAME: "mlops-${{ env.PROJECT_PREFIX }}-${{ env.ENV }}-${{ env.PROJECT_NAME }}"
+  terraform:
+    name: 'Terraform'
+    needs: [set-project-vars]
+    runs-on: ubuntu-latest
+    environment: production
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: "infra/environments/${{  needs.set-project-vars.outputs.ENV }}"
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Install TF CLI
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - id: "auth"
+      name: "Authenticate to Google Cloud"
+      uses: "google-github-actions/auth@v1"
+      with:
+        credentials_json: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
+        create_credentials_file: true
+        export_environment_variables: true
+
+    - name: tf initialization
+      run: terraform init
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+    # Pass the Slack both auth token as a variable
+    - name: Plan infra
+      run: terraform plan -var-file=${{  needs.set-project-vars.outputs.ENV }}.tfvars -var="slack_bot_token=${{ secrets.SLACK_BOT_AUTH_TOKEN }}"
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+    - name: Apply infra
+      run: terraform apply -auto-approve -var-file=${{  needs.set-project-vars.outputs.ENV }}.tfvars -var="slack_bot_token=${{ secrets.SLACK_BOT_AUTH_TOKEN }}"
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+  compile-vertex-pipeline-job:
+    name: "Compile and Upload"
+    needs: [set-project-vars, terraform]
+    uses: ./.github/workflows/compile_and_upload_vertex_pipeline.yml
+    with:
+      environment: ${{  needs.set-project-vars.outputs.ENV }}
+      model_name_prefix: xgb_churn_prediction
+      pipeline_bucket_name: ${{  needs.set-project-vars.outputs.PIPELINE_BUCKET_NAME }}
+      with-pipeline-schedules: ${{  inputs.with-pipeline-schedules || false }}
+    secrets:
+      SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+  docker-build-push:
+    name: "Docker Build & Push"
+    needs: [set-project-vars, terraform]
+    uses: ./.github/workflows/docker_build.yml
+    with:
+      environment: ${{  needs.set-project-vars.outputs.ENV }}
+      location: ${{  needs.set-project-vars.outputs.LOCATION }}
+      model_name_prefix: xgb_churn_prediction
+      project_prefix: ${{  needs.set-project-vars.outputs.PROJECT_PREFIX }}
+      project_name: ${{  needs.set-project-vars.outputs.PROJECT_NAME }}
+    secrets:
+      SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+  configure-alerting:
+    name: "Configure alerting policies"
+    needs: [set-project-vars, terraform]
+    uses: ./.github/workflows/configure_alerting.yml
+    with:
+      environment: ${{  needs.set-project-vars.outputs.ENV }}
+      model_name_prefix: xgb_churn_prediction
+      pipeline_bucket: ${{  needs.set-project-vars.outputs.PIPELINE_BUCKET_NAME }}
+    secrets:
+      SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+  run-training:
+    name: "Run Training"
+    if: ${{ inputs.run-training == true }}
+    needs: [set-project-vars, terraform, docker-build-push, compile-vertex-pipeline-job]
+    uses: ./.github/workflows/run_training.yml
+    with:
+      environment: ${{  needs.set-project-vars.outputs.ENV }}
+      model_name_prefix: xgb_churn_prediction
+      pipeline_bucket: ${{  needs.set-project-vars.outputs.PIPELINE_BUCKET_NAME }}
+    secrets:
+      SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}

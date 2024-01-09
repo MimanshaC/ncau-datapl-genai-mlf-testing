@@ -1,0 +1,73 @@
+name: Docker Build and Deploy
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      location:
+        required: true
+        type: string
+      tag:
+        default: latest
+        required: false
+        type: string
+      model_name_prefix:
+        required: true
+        type: string
+      project_prefix:
+        required: true
+        type: string
+      project_name:
+        required: true
+        type: string
+    secrets:
+      SERVICE_ACCOUNT_KEY:
+        required: true
+jobs:
+  upload-artifacts:
+    name: upload artifacts
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+    env:
+      image_name: "mlops-${{ inputs.model_name_prefix }}"
+      project_name: ${{ inputs.project_name }}
+      remote_image_path: "${{ inputs.location }}-docker.pkg.dev/${{ inputs.project_prefix }}-${{ inputs.environment }}-${{ inputs.project_name }}/ml-vertex-pipelines-${{ inputs.environment }}/${{ inputs.model_name_prefix }}"
+      location: ${{ inputs.location }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: 'Setup Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0.6.0'
+
+      - name: 'Setup docker'
+        run: gcloud auth configure-docker $location-docker.pkg.dev
+
+      - name: 'Docker build'
+        run: |
+          echo "docker build . -t $image_name:local -t $image_name:${GITHUB_SHA}"
+          docker build . -t $image_name:local -t $image_name:${GITHUB_SHA}
+
+      - name: 'Docker Image Scan'
+        uses: anchore/scan-action@v3
+        with:
+         fail-build: false
+         image: ${{ env.image_name }}:local
+         only-fixed: true
+         output-format: table
+         severity-cutoff: critical
+
+      - name: 'Docker tag & push'
+        run: |
+          echo "docker push ${remote_image_path}:${GITHUB_SHA}"
+          docker tag $image_name:${GITHUB_SHA} "$remote_image_path:${GITHUB_SHA}"
+          docker tag $image_name:${GITHUB_SHA} "$remote_image_path:${{ inputs.tag }}"
+          docker push "$remote_image_path:${GITHUB_SHA}"
+          docker push "$remote_image_path:${{ inputs.tag }}"

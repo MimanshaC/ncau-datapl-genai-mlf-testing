@@ -1,0 +1,37 @@
+repos:
+-  repo: https://github.com/pre-commit/pre-commit-hooks
+   rev: v4.4.0
+   hooks:
+   -  id: end-of-file-fixer
+   -  id: trailing-whitespace
+   -  id: check-ast
+   -  id: check-json
+      exclude: .vscode
+   -  id: check-toml
+   -  id: check-yaml
+      args: ["--allow-multiple-documents"]
+
+-   repo: https://github.com/psf/black
+    rev: 22.3.0
+    hooks:
+    -   id: black
+        additional_dependencies: ['click==8.0.4']
+
+-  repo: https://github.com/PyCQA/flake8
+   rev: 5.0.4
+   hooks:
+   -  id: flake8
+      language_version: python3.10
+
+-  repo: https://github.com/pycqa/isort
+   rev: '5.11.5'
+   hooks:
+   -  id: isort
+
+-  repo: https://github.com/pre-commit/mirrors-mypy
+   rev: 'v1.2.0'  # Use the sha / tag you want to point at
+   hooks:
+   -  id: mypy
+      verbose: true
+      exclude: tests/
+      args: [--config-file, setup.cfg]

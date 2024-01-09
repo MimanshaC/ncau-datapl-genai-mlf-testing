@@ -1,0 +1,44 @@
+name: Test and Lint Jobs
+on: push
+jobs:
+  run-lint-and-pytest:
+    name: Lint Test, Compile and Upload
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+    env:
+      ENVIRONMENT: "TEST"
+      PIPELINE_BUCKET: "TEST"
+      MODEL_NAME_PREFIX: "TEST"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.7.0
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      - name: Install project
+        run: |
+          poetry install --no-interaction
+
+      - name: Running Pre-commit Linting tests
+        run: |
+          source .venv/bin/activate
+          pre-commit install
+          poe quality
+
+      - name: Running Py tests
+        run: |
+          source .venv/bin/activate
+          poe test

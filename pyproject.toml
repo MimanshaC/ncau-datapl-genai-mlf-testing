@@ -1,0 +1,80 @@
+[tool.poetry]
+name = "xgb_churn_prediction"
+version = "0.1.0"
+description = ""
+authors = ["Mimansha Chandel <mimansha.chandel@news.com.au>"]
+readme = "README.md"
+include = ["xgb_churn_prediction"]
+
+[[tool.poetry.source]]
+name = "standard"
+url = "https://pypi.org/simple"
+default = true
+
+[tool.poetry.dependencies]
+python = "^3.10"
+kfp = "1.8.22"
+google-cloud-aiplatform = "^1.23.0"
+google-cloud-monitoring = "^2.14.2"
+google-cloud-pipeline-components = "^1.0.42"
+pandas = "^2.0.1"
+scikit-learn = "^1.2.2"
+db-dtypes = "^1.1.1"
+evidently = "^0.4.1"
+google-cloud-scheduler = "^2.11.0"
+google-cloud-run = "^0.7.1"
+python-dotenv = "^1.0.0"
+flask = "^2.3.2"
+gunicorn = "^20.1.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.0"
+pre-commit = "^3.2.2"
+jupyter = "^1.0.0"
+notebook = "^6.5.4"
+ipykernel = "^6.22.0"
+black = "^22.3.0"
+isort = "^5.12.0"
+mypy = "^1.2.0"
+flake8 = "5.0.4"
+poethepoet = "^0.19.0"
+matplotlib = "^3.7.1"
+statsmodels = "^0.13.5"
+plotly = "^5.14.1"
+shap = "^0.41.0"
+numpy = "~1.23.0"
+kaleido = "0.2.1"
+pytest-mock = "^3.10.0"
+seaborn = "^0.12.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = [
+  ".", "src",
+]
+
+[tool.black]
+line-length = 100
+
+[tool.poe.tasks]
+test = "pytest tests"
+quality = "pre-commit run --all-files"
+build_package = "poetry build"
+compile_pipelines = [
+  {cmd = "python -m vertex_pipelines.compile_pipeline"},
+]
+compile_pipelines_with_schedules = [
+  {cmd = "python -m vertex_pipelines.compile_pipeline --include-schedules"},
+]
+run_training = [
+  {cmd = "python -m vertex_pipelines.run_all_training"},
+]
+sync_alert_policies_in_ci = [
+  {cmd = "python -m vertex_pipelines.alerting"}
+]
+label_model_in_ci = [
+  {cmd = "python -m vertex_pipelines.label_model"}
+]

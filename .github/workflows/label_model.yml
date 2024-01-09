@@ -1,0 +1,92 @@
+name: Label model as default
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: choice
+        description: Select env
+        options:
+        - nprod
+        - prod
+      model_type:
+        required: true
+        type: choice
+        description: Select model type
+        options:
+        - custom
+      model_version:
+        required: false
+        description: State model version as integer (leave blank to select latest)
+        type: string
+      model_name_prefix:
+        required: true
+        description: model name prefix
+        type: string
+
+jobs:
+  set-project-vars:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout this repo
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+          .github
+    - name: Set Environment Variables
+      id: set-vars
+      uses: ./.github/actions
+      with:
+        varFilePath: ./.github/variables/project_vars.env
+    outputs:
+      LOCATION: ${{ env.LOCATION }}
+      PROJECT_PREFIX: ${{ env.PROJECT_PREFIX }}
+      PROJECT_NAME: ${{ env.PROJECT_NAME }}
+      PIPELINE_BUCKET_NAME: "mlops-${{ env.PROJECT_PREFIX }}-${{ env.ENV }}-${{ env.PROJECT_NAME }}"
+  label-model:
+    name: Label model as default
+    needs: [set-project-vars]
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+    env:
+      ENVIRONMENT: ${{ inputs.environment }}
+      PIPELINE_BUCKET: "gs://${{  needs.set-project-vars.outputs.PIPELINE_BUCKET_NAME }}"
+      MODEL_NAME_PREFIX: ${{ inputs.model_name_prefix }}
+      LABELING_MODEL_TYPE: ${{ inputs.model_type }}
+      LABELING_MODEL_VERSION: ${{ inputs.model_version }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.7.0
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      - name: Install project
+        run: |
+          poetry install --no-interaction
+
+      - name: Google Auth
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: Setup Cloud SDK
+        uses: "google-github-actions/setup-gcloud@v0.6.0"
+
+      - name: Labelling model as default
+        run: |
+          source .venv/bin/activate
+          poe label_model_in_ci
