@@ -41,6 +41,6 @@ def performance_monitoring_pipeline(model_version: str = "") -> None:
         performance_monitoring_lookback_days=PERFORMANCE_MONITORING_LOOKBACK_DAYS,
         pipeline_job_name=dsl.PIPELINE_JOB_NAME_PLACEHOLDER,
         target_column=TARGET_COLUMN,
-        series_id_column=SERIES_ID_COLUMN,
+        #series_id_column=SERIES_ID_COLUMN,
         timestamp_column=TIMESTAMP_COLUMN,
     ).set_display_name("Evaluate model performance across inferences.")

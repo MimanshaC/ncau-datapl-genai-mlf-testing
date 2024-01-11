@@ -26,8 +26,8 @@ SERVICE_ENDPOINT = "australia-southeast1-aiplatform.googleapis.com"
 
 # TODO: define model specific data constants
 DATASET = MODEL_NAME_PREFIX
-SERIES_ID_COLUMN = "series_id_column"
-TARGET_COLUMN = "target_column"
+#SERIES_ID_COLUMN = "series_id_column"
+TARGET_COLUMN = "target_binary"
 TIMESTAMP_COLUMN = "prediction_timestamp"
 PREDICTION_COLUMN = "prediction_value"
 INFERENCE_HISTORY_TABLE = "inference_data_history"
