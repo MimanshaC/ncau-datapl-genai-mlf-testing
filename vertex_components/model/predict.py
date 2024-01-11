@@ -16,7 +16,7 @@ def batch_predictions(
     model: Input[Model],
     timestamp_expr: str,
     prediction_expr: str,
-    series_id_expr: str,
+    #series_id_expr: str,
 ) -> NamedTuple("output", [("result_table_id", str), ["model_version", str]]):  # type: ignore
     """Component to run batch predictions as part of Vertex AI pipeline
     All relevant libraries need to be imported within the component function;
