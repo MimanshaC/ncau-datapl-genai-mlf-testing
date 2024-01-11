@@ -14,7 +14,7 @@ from config import PIPELINE_ROOT
 from config import PREDICTION_COLUMN
 from config import PREDICTION_DRIFT_LOOKBACK_DAYS
 from config import PROJECT
-from config import SERIES_ID_COLUMN
+#from config import SERIES_ID_COLUMN
 from config import SERVICE_ENDPOINT
 from config import TIMESTAMP_COLUMN
 from config import TRAINING_HISTORY_TABLE
