@@ -72,7 +72,7 @@ def create_train_test_table(
     # data_ingestion.load_sql_query_and_execute to load sql from .sql file
     # with parameters
     data_query = f"""SELECT * FROM
-        `{project}.mlf_testing.churn_prediction_data`
+        `{project}.mlf_testing.xgb_churn_prediction.churn_prediction_data`
     """
     dtypes = {
          'month': int,
@@ -229,7 +229,7 @@ def create_inference_table(
     # .sql file with parameters
     query = f"""
         SELECT * except(target_binary)
-        FROM `{project}.mlf_testing.churn_prediction_data`
+        FROM `{project}.xgb_churn_prediction.churn_prediction_data`
     """
     dtypes = {
         'month': int,
