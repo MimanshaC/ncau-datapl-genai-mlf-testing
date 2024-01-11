@@ -75,6 +75,7 @@ def create_train_test_table(
         `{project}.mlf_testing.xgb_churn_prediction.churn_prediction_data`
     """
     dtypes = {
+         'user_id': int,
          'month': int,
          'package_duration': int,
          'segment': int,
@@ -232,6 +233,7 @@ def create_inference_table(
         FROM `{project}.xgb_churn_prediction.churn_prediction_data`
     """
     dtypes = {
+        'user_id': int,
         'month': int,
         'package_duration': int,
         'segment': int,
