@@ -9,7 +9,7 @@ from config import MODEL_NAME_CUSTOM
 from config import PERFORMANCE_MONITORING_LOOKBACK_DAYS
 from config import PIPELINE_ROOT
 from config import PROJECT
-from config import SERIES_ID_COLUMN
+#from config import SERIES_ID_COLUMN
 from config import TARGET_COLUMN
 from config import TIMESTAMP_COLUMN
 from vertex_components.monitoring import performance_monitoring
