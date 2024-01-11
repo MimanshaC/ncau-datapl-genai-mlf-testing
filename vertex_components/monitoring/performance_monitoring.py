@@ -19,7 +19,7 @@ def evaluate_performance_monitoring(
     performance_monitoring_lookback_days: int,
     pipeline_job_name: str,
     target_column: str,
-    series_id_column: str,
+    #series_id_column: str,
     timestamp_column: str,
     metrics: Output[Metrics],
     report: Output[HTML],
