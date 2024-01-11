@@ -9,7 +9,7 @@ def add_to_inference_history_table(
     dataset: str,
     job_config: dict,
     inference_result_table_name: str,
-    #series_id_expr: str,
+    series_id_expr: str,
     prediction_expr: str,
     timestamp_expr: str,
 ) -> Any:

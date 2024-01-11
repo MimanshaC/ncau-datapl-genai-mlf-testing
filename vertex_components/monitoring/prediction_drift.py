@@ -18,7 +18,7 @@ def evaluate_prediction_drift(
     model_version: str,
     location: str,
     bq_location: str,
-    #series_id_expr: str,
+    series_id_expr: str,
     prediction_expr: str,
     timestamp_expr: str,
     pipeline_job_name: str,

@@ -14,7 +14,7 @@ from config import PIPELINE_ROOT
 from config import PREDICTION_COLUMN
 from config import PREDICTION_DRIFT_LOOKBACK_DAYS
 from config import PROJECT
-#from config import SERIES_ID_COLUMN
+from config import SERIES_ID_COLUMN
 from config import SERVICE_ENDPOINT
 from config import TIMESTAMP_COLUMN
 from config import TRAINING_HISTORY_TABLE
@@ -71,7 +71,7 @@ def inference_pipeline_custom() -> None:
         model=importer_spec.outputs["artifact"],
         timestamp_expr=TIMESTAMP_COLUMN,
         prediction_expr=PREDICTION_COLUMN,
-        #series_id_expr=SERIES_ID_COLUMN,
+        series_id_expr=SERIES_ID_COLUMN,
     )
 
     # Set inference result table expiration
@@ -96,7 +96,7 @@ def inference_pipeline_custom() -> None:
         model_version=batch_predict.outputs["model_version"],
         location=LOCATION,
         bq_location=LOCATION_BQ,
-        #series_id_expr=SERIES_ID_COLUMN,
+        series_id_expr=SERIES_ID_COLUMN,
         timestamp_expr=TIMESTAMP_COLUMN,
         prediction_expr=PREDICTION_COLUMN,
         pipeline_job_name=dsl.PIPELINE_JOB_NAME_PLACEHOLDER,
@@ -133,7 +133,7 @@ def inference_pipeline_custom() -> None:
         dataset=DATASET,
         job_config=job_config.output,
         inference_result_table_name=batch_predict.outputs["result_table_id"],
-        #series_id_expr=SERIES_ID_COLUMN,
+        series_id_expr=SERIES_ID_COLUMN,
         timestamp_expr=TIMESTAMP_COLUMN,
         prediction_expr=PREDICTION_COLUMN,
     ).after(prediction_drift).set_display_name("Copy to history table")
