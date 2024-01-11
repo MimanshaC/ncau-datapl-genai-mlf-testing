@@ -1,15 +1,15 @@
-import os
+#import os
 
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
-load_dotenv(".env")
+#load_dotenv(".env")
 
 # Load environment variables into constants - key error raised if not set
-ENV = os.environ["ENVIRONMENT"]
-MODEL_NAME_PREFIX = os.environ["MODEL_NAME_PREFIX"]
+ENV = "nprod"
+MODEL_NAME_PREFIX = "xgb_churn_prediction"
 MODEL_NAME_CUSTOM = f"{MODEL_NAME_PREFIX}_custom"
 
-PIPELINE_BUCKET = os.environ["PIPELINE_BUCKET"]
+PIPELINE_BUCKET = "gs://mlops-ncau-data-nprod-aitrain"
 PIPELINE_ROOT = f"{PIPELINE_BUCKET}/{MODEL_NAME_PREFIX}"
 
 # Variables to change per project
