@@ -11,7 +11,7 @@ ENV = "nprod"
 MODEL_NAME_PREFIX = "xgb_churn_prediction"
 MODEL_NAME_CUSTOM = f"{MODEL_NAME_PREFIX}_custom"
 
-PIPELINE_BUCKET = gs://mlops-ncau-data-nprod-aitrain
+PIPELINE_BUCKET = "gs://mlops-ncau-data-nprod-aitrain"
 #PIPELINE_BUCKET = os.environ["PIPELINE_BUCKET"]
 PIPELINE_ROOT = f"{PIPELINE_BUCKET}/{MODEL_NAME_PREFIX}"
 
