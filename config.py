@@ -17,7 +17,7 @@ PIPELINE_ROOT = f"{PIPELINE_BUCKET}/{MODEL_NAME_PREFIX}"
 
 # Variables to change per project
 PROJ_PREFIX = "ncau-data"
-IMAGE_REGISTRY = f"ml-vertex-pipelines-{ENV}"  # Change based on the project
+IMAGE_REGISTRY = f"ml-vertex-pipelines-v2-{ENV}"  # Change based on the project
 
 # Define additional constants across project
 PROJECT = f"{PROJ_PREFIX}-{ENV}-aitrain"
