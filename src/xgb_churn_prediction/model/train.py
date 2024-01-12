@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
 from sklearn.pipeline import Pipeline
 
 from .features import Featurizer
@@ -20,17 +21,18 @@ def train_model(train_data_x: pd.DataFrame, train_data_y: pd.Series) -> Pipeline
     """
 
     # define type of model to train
-    model = RandomForestClassifier(**HYPERPARAMETERS)
+    #model = RandomForestClassifier(**HYPERPARAMETERS)
+    model = XGBClassifier()
 
     # Define the preprocessing pipeline
-    preprocessing_pipeline = Pipeline(
+    """preprocessing_pipeline = Pipeline(
         [
             ("generate_features", Featurizer()),
             # Add additional preprocessing steps here
         ]
-    )
+    )"""
 
-    full_pipeline = Pipeline([("preprocessing", preprocessing_pipeline), ("model", model)])
+    full_pipeline = Pipeline([("model", model)])
 
     # Fit the full pipeline on the training data
     full_pipeline.fit(train_data_x, train_data_y)

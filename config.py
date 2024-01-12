@@ -5,11 +5,14 @@ from dotenv import load_dotenv
 load_dotenv(".env")
 
 # Load environment variables into constants - key error raised if not set
-ENV = os.environ["ENVIRONMENT"]
-MODEL_NAME_PREFIX = os.environ["MODEL_NAME_PREFIX"]
+ENV = "nprod"
+#ENV = os.environ["ENVIRONMENT"]
+#MODEL_NAME_PREFIX = os.environ["MODEL_NAME_PREFIX"]
+MODEL_NAME_PREFIX = "xgb_churn_prediction"
 MODEL_NAME_CUSTOM = f"{MODEL_NAME_PREFIX}_custom"
 
-PIPELINE_BUCKET = os.environ["PIPELINE_BUCKET"]
+PIPELINE_BUCKET = "gs://mlops-ncau-data-nprod-aitrain"
+#PIPELINE_BUCKET = os.environ["PIPELINE_BUCKET"]
 PIPELINE_ROOT = f"{PIPELINE_BUCKET}/{MODEL_NAME_PREFIX}"
 
 # Variables to change per project
@@ -26,8 +29,8 @@ SERVICE_ENDPOINT = "australia-southeast1-aiplatform.googleapis.com"
 
 # TODO: define model specific data constants
 DATASET = MODEL_NAME_PREFIX
-SERIES_ID_COLUMN = "series_id_column"
-TARGET_COLUMN = "target_column"
+SERIES_ID_COLUMN = "user_id"
+TARGET_COLUMN = "target_binary"
 TIMESTAMP_COLUMN = "prediction_timestamp"
 PREDICTION_COLUMN = "prediction_value"
 INFERENCE_HISTORY_TABLE = "inference_data_history"
