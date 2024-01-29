@@ -72,7 +72,7 @@ def create_train_test_table(
     # data_ingestion.load_sql_query_and_execute to load sql from .sql file
     # with parameters
     data_query = f"""SELECT * FROM
-        `{project}.xgb_churn_prediction.churn_prediction_data`
+        `{project}.mlf_testing.customer_churn_data`
     """
     dtypes = {
          'user_id': int,
@@ -230,7 +230,7 @@ def create_inference_table(
     # .sql file with parameters
     query = f"""
         SELECT * except(target_binary)
-        FROM `{project}.xgb_churn_prediction.churn_prediction_data`
+        FROM `{project}.mlf_testing.customer_churn_data`
     """
     dtypes = {
         'user_id': int,
