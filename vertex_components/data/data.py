@@ -72,7 +72,7 @@ def create_train_test_table(
     # data_ingestion.load_sql_query_and_execute to load sql from .sql file
     # with parameters
     data_query = f"""SELECT * FROM
-        `{project}.mlf_testing.xgb_churn_prediction.churn_prediction_data`
+        `{project}.xgb_churn_prediction.churn_prediction_data`
     """
     dtypes = {
          'user_id': int,
