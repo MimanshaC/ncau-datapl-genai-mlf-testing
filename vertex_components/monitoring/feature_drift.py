@@ -72,7 +72,7 @@ def evaluate_feature_drift(
 
     # TODO: define features to check on for data drift
     # NOTE: limiting range to speed up processing
-    features = ["feature_1"]
+    features = ['segment','brand_regional','gender_F']
 
     logging.info(f"Generating evidently data drift report and metrics for columns {features}")
     result_report, result_metrics, monitoring_metrics = create_report(
