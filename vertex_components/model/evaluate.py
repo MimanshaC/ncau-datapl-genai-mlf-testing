@@ -27,9 +27,9 @@ def evaluate(
         model (Input[Model]): Vertex model as Model artifact to evaluate
         metrics (Output[Metrics]): metrics as output Artifact of component
     """
-    from src.xgb_churn_prediction.data import data_ingestion
-    from src.xgb_churn_prediction.model import evaluate
-    from src.xgb_churn_prediction.model import save_load_model
+    from xgb_churn_prediction.data import data_ingestion
+    from xgb_churn_prediction.model import evaluate
+    from xgb_churn_prediction.model import save_load_model
 
     # Read in training data
     sql_query = f"""
@@ -75,8 +75,8 @@ def champion_challenger_classification(
 
     from google.cloud import aiplatform
 
-    from src.xgb_churn_prediction.model import evaluate
-    from src.xgb_churn_prediction.monitoring.metrics import (
+    from xgb_churn_prediction.model import evaluate
+    from xgb_churn_prediction.monitoring.metrics import (
         write_metrics_to_cloud_monitoring,
     )
 
@@ -157,8 +157,8 @@ def champion_challenger_regression(
 
     from google.cloud import aiplatform
 
-    from src.xgb_churn_prediction.model import evaluate
-    from src.xgb_churn_prediction.monitoring.metrics import (
+    from xgb_churn_prediction.model import evaluate
+    from xgb_churn_prediction.monitoring.metrics import (
         write_metrics_to_cloud_monitoring,
     )
 
