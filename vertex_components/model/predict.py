@@ -39,10 +39,10 @@ def batch_predictions(
     from datetime import datetime
     from datetime import timezone
 
-    from xgb_churn_prediction.data import data_ingestion
-    from xgb_churn_prediction.data import data_output
-    from xgb_churn_prediction.model import predict
-    from xgb_churn_prediction.model import save_load_model
+    from src.xgb_churn_prediction.data import data_ingestion
+    from src.xgb_churn_prediction.data import data_output
+    from src.xgb_churn_prediction.model import predict
+    from src.xgb_churn_prediction.model import save_load_model
 
     # Read in inference data
     logging.info("Fetching current inference data from Big Query")
