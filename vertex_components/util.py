@@ -95,7 +95,7 @@ def change_table_name(
         table (Output[Artifact]): new table as output artifact to access via Vertex UI
     """
 
-    from xgb_churn_prediction.data import data_ingestion
+    from src.xgb_churn_prediction.data import data_ingestion
 
     query = f"""
         ALTER TABLE `{project}.{dataset}.{old_table_id}`
