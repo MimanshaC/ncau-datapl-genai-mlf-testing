@@ -271,7 +271,6 @@ def create_inference_table(
         'frequency30_change_LT_Neg_60': int,
         'price_up': float,
         'section_sops_30': int,
-        'target_binary': int,
         'subscription_id': int,
         'pcsid': int,
         'tenure_grouping': int,
