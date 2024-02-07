@@ -25,7 +25,7 @@ def create_train_test_sql_query(
     """
     from collections import namedtuple
 
-    from xgb_churn_prediction.data import data_ingestion
+    from src.xgb_churn_prediction.data import data_ingestion
 
     train_data_query = data_ingestion.create_data_query(param_1, param_2)
     test_data_query = data_ingestion.create_data_query(param_2, param_3)
@@ -61,10 +61,10 @@ def create_train_test_table(
 
     import pandas as pd
 
-    from xgb_churn_prediction.data import data_clean
-    from xgb_churn_prediction.data import data_ingestion
-    from xgb_churn_prediction.data import data_output
-    from xgb_churn_prediction.data import data_split
+    from src.xgb_churn_prediction.data import data_clean
+    from src.xgb_churn_prediction.data import data_ingestion
+    from src.xgb_churn_prediction.data import data_output
+    from src.xgb_churn_prediction.data import data_split
 
     timestamp = datetime.now(tz=timezone.utc)
 
@@ -186,7 +186,7 @@ def create_inference_sql_query(
 
     from collections import namedtuple
 
-    from xgb_churn_prediction.data import data_ingestion
+    from src.xgb_churn_prediction.data import data_ingestion
 
     # Create the inference data query using a function from data_ingestion
     data_query = data_ingestion.create_inference_data_query(param_1)
@@ -222,8 +222,8 @@ def create_inference_table(
     from datetime import datetime
     from datetime import timezone
 
-    from xgb_churn_prediction.data import data_ingestion
-    from xgb_churn_prediction.data import data_output
+    from src.xgb_churn_prediction.data import data_ingestion
+    from src.xgb_churn_prediction.data import data_output
 
     # TODO: Add use case specific Data Ingestion query. Use
     # data_ingestion.load_sql_query_and_execute to load sql from
@@ -231,6 +231,7 @@ def create_inference_table(
     query = f"""
         SELECT * except(target_binary)
         FROM `{project}.mlf_testing.customer_churn_data`
+        LIMIT 100
     """
     dtypes = {
         'user_id': int,
