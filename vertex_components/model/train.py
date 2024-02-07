@@ -22,10 +22,10 @@ def train(
     """
     import logging
 
-    from src.xgb_churn_prediction.data import data_ingestion
-    from src.xgb_churn_prediction.data import data_split
-    from src.xgb_churn_prediction.model import save_load_model
-    from src.xgb_churn_prediction.model import train
+    from xgb_churn_prediction.data import data_ingestion
+    from xgb_churn_prediction.data import data_split
+    from xgb_churn_prediction.model import save_load_model
+    from xgb_churn_prediction.model import train
 
     # Set model path
     model_path = str(model.path)
