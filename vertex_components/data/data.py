@@ -231,7 +231,7 @@ def create_inference_table(
     query = f"""
         SELECT * except(target_binary)
         FROM `{project}.mlf_testing.customer_churn_data`
-        LIMIT 100
+        
     """
     dtypes = {
         'user_id': int,
