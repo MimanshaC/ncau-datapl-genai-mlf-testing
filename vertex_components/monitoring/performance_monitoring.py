@@ -75,53 +75,6 @@ def evaluate_performance_monitoring(
         SELECT *
         FROM `{project_id}.mlf_testing.customer_churn_data`
     """
-    dtypes = {
-         'user_id': int,
-         'month': int,
-         'package_duration': int,
-         'segment': int,
-         'brand_regional': int,
-         'gender_F': int,
-         'brand_metro': int,
-         'brand_australian': int,
-         'current_offer_intro_Y': int,
-         'digital_subscription': int,
-         'articleviews_30': int,
-         'bill_shock_days': int,
-         'current_offer_adj_weekly_price': float,
-         'current_offer_rp_term_price': float,
-         'dormant_freq_last_12_months': int,
-         'dormant_freq_last_6_months': int,
-         'frequency30': int,
-         'length_of_relationship': int,
-         'my_account_days': int,
-         'num_previous_subs': int,
-         'other_sections_30': int,
-         'pageviews_30': int,
-         'pricing_days': float,
-         'ratio_views_to_article_views': float,
-         'recency': int,
-         'section_breadth30': int,
-         'section_breadth7': int,
-         'subscription_tenure': int,
-         'visits_30': int,
-         'visits_7': int,
-         'bill_shock_days_rate': float,
-         'pricing_days_rate': float,
-         'frequency30_change_LT_0': int,
-         'frequency30_change_LT_Neg_20': int,
-         'frequency30_change_LT_Neg_60': int,
-         'price_up': float,
-         'section_sops_30': int,
-         'target_binary': int,
-         'subscription_id': int,
-         'pcsid': int,
-         'tenure_grouping': int,
-         'mosaicsegments': int,
-         'articleviews30_change_LT_0': int,
-         'articleviews30_change_LT_Neg_20': int,
-         'articleviews30_change_LT_Neg_60': int}
-
     # load dataset from BigQuery into pandas df
     ground_truth_dataset = data_ingestion.execute_bq_query(
         project_id, ground_truth_data_query, dtypes=dtypes
