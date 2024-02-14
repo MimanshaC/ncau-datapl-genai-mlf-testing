@@ -146,7 +146,7 @@ def evaluate_performance_monitoring(
         predictions_data=inference_dataset,
         target_column=target_column,
         timestamp_column=timestamp_column,
-        series_id_column=int(series_id_column),
+        series_id_column=series_id_column.astype(int),
     )
 
     if processed_data.empty:
@@ -161,7 +161,7 @@ def evaluate_performance_monitoring(
     result_report = performance_monitoring.generate_evidently_report(
         processed_data=processed_data,
         target_column=target_column,
-        series_id_column=int(series_id_column),
+        series_id_column=series_id_column.astype(int),
     )
 
     result_metrics = performance_monitoring.extract_metrics(result_report)
