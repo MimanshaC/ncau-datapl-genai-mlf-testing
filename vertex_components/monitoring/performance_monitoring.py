@@ -76,7 +76,7 @@ def evaluate_performance_monitoring(
         FROM `{project_id}.mlf_testing.customer_churn_data`
     """
     dtypes = {
-         'user_id': int,
+         'user_id': str,
          'month': int,
          'package_duration': int,
          'segment': int,
@@ -113,7 +113,7 @@ def evaluate_performance_monitoring(
          'frequency30_change_LT_Neg_60': int,
          'price_up': float,
          'section_sops_30': int,
-         'target_binary': int,
+         'target_binary': str,
          'subscription_id': int,
          'pcsid': int,
          'tenure_grouping': int,
@@ -146,7 +146,7 @@ def evaluate_performance_monitoring(
         predictions_data=inference_dataset,
         target_column=target_column,
         timestamp_column=timestamp_column,
-        series_id_column=series_id_column.astype(int),
+        series_id_column=series_id_column,
     )
 
     if processed_data.empty:
@@ -161,7 +161,7 @@ def evaluate_performance_monitoring(
     result_report = performance_monitoring.generate_evidently_report(
         processed_data=processed_data,
         target_column=target_column,
-        series_id_column=series_id_column.astype(int),
+        series_id_column=series_id_column,
     )
 
     result_metrics = performance_monitoring.extract_metrics(result_report)
