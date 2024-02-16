@@ -76,7 +76,7 @@ def evaluate_performance_monitoring(
         FROM `{project_id}.mlf_testing.customer_churn_data`
     """
     dtypes = {
-         'user_id': str,
+         'user_id': int,
          'month': int,
          'package_duration': int,
          'segment': int,
@@ -113,7 +113,7 @@ def evaluate_performance_monitoring(
          'frequency30_change_LT_Neg_60': int,
          'price_up': float,
          'section_sops_30': int,
-         'target_binary': str,
+         'target_binary': int,
          'subscription_id': int,
          'pcsid': int,
          'tenure_grouping': int,
